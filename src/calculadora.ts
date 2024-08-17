@@ -9,13 +9,16 @@ function operar(operacion: string, a: number, b: number) {
         return dividir(a, b);
     }else if (operacion === 'potencia') {
         return potencia(a, b); 
-    }else if (operacion === 'factorial') {
-        return factorial(a); 
-    }    
+    }
 }
 
 function suma(a: number, b: number) {
-    validacion(a, b, 'suma');
+    validacion(a, b, 'sumar');
+    
+    if (isNaN(a) || isNaN(b)) {
+        return NaN;
+    }
+    
     return a + b;
 }
 
@@ -31,7 +34,7 @@ function multiplicar(a: number, b:number) {
 
 function dividir(a: number, b:number) {
     validacion(a, b, 'dividir');
-    return a * b;
+    return a / b;
 }
 
 function potencia(a: number, b:number) {
@@ -39,21 +42,14 @@ function potencia(a: number, b:number) {
     return a ** b;
 }
 
-function factorial(a: number) {
-
+function factorial(a: number, acumulador: number = 1): number {
     validacionFactorial(a);
-
-    if (a === 0) {
-        return 1;
-    } else {
-        let resultado : number = a * factorial(a - 1);
-        return resultado;
-    }
+    if (a === 0) return acumulador;
+    return factorial(a - 1, acumulador * a);
 }
 
 function validacion(a: number, b: number, operacion: string) {
     if (a === undefined || b === undefined) {
-        console.log("retornando throw")
         throw new Error("No se pueden " + operacion + " indefinidos");
     }
 
@@ -67,9 +63,13 @@ function validacionFactorial(a: number) {
         throw new Error("No es posible realizar factorial de indefinidos");
     }
 
-    if (typeof a !== 'number') {
-        return NaN;
+    if (typeof a !== 'number' || isNaN(a)) {
+        throw new Error("El valor ingresado no es un número");
+    }
+
+    if (a < 0) {
+        throw new Error("No es posible realizar factorial de un número negativo");
     }
 }
 
-export { suma, operar, restar, multiplicar, dividir, potencia, factorial };
+export { suma, operar, restar, multiplicar, dividir, potencia, factorial, validacion, validacionFactorial };
